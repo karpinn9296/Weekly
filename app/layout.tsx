@@ -1,9 +1,24 @@
-import "./globals.css"; // <--- 이 줄이 반드시 있어야 합니다!
+import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
+import { Metadata, Viewport } from "next"; // Viewport 추가
 
-export const metadata = {
-  title: "Weekly Log",
-  description: "우리들의 주간 기록",
+export const metadata: Metadata = {
+  title: "Weekly",
+  description: "",
+  manifest: "/manifest.json", // 매니페스트 연결
+  icons: {
+    icon: "/icon-192x192.png",
+    apple: "/icon-192x192.png", // 아이폰용 아이콘
+  },
+};
+
+// 뷰포트 설정 (모바일 확대 방지 등)
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false, // 앱처럼 보이게 확대 금지
 };
 
 export default function RootLayout({
