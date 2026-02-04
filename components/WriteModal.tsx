@@ -72,7 +72,7 @@ export default function WriteModal({ onClose }: WriteModalProps) {
       <div style={{ backgroundColor: 'white', width: '90%', maxWidth: '500px', borderRadius: '16px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px', maxHeight: '90vh', overflowY: 'auto' }}>
         
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h3 style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>기록 남기기</h3>
+          <h3 style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>로그 남기기</h3>
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><BiX size={24} /></button>
         </div>
 
@@ -80,7 +80,7 @@ export default function WriteModal({ onClose }: WriteModalProps) {
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder="이번 주는 어떤 일이 있었나요? (URL을 입력하면 게시글에서 자동으로 카드가 생성됩니다)"
+          placeholder="이번 주는 어떤 일이 있었나요?"
           style={{ width: '100%', height: '150px', padding: '12px', borderRadius: '12px', border: '1px solid #ddd', resize: 'none', fontSize: '1rem', fontFamily: 'inherit' }}
         />
 
@@ -109,7 +109,7 @@ export default function WriteModal({ onClose }: WriteModalProps) {
             }}
           >
             {isSubmitting && <BiLoaderAlt className="spinner" />}
-            기록하기
+            로깅하기
           </button>
         </div>
 

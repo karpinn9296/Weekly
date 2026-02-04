@@ -346,10 +346,10 @@ export default function UserProfilePage() {
   
               <div style={{ display: 'flex', borderBottom: '1px solid #eee', marginTop: '10px' }}>
                  <div className="tab-item" onClick={() => { setActiveTab('all'); setSelectedWeekFilter(null); }} style={{ borderBottom: activeTab === 'all' ? '3px solid #333' : '3px solid transparent', color: activeTab === 'all' ? '#333' : '#888' }}>
-                   <BiListUl size={20} /> <span>전체 글</span>
+                   <BiListUl size={20} /> <span>전체 로그</span>
                  </div>
                  <div className="tab-item" onClick={() => { setActiveTab('weekly'); setSelectedWeekFilter(null); }} style={{ borderBottom: activeTab === 'weekly' ? '3px solid #333' : '3px solid transparent', color: activeTab === 'weekly' ? '#333' : '#888' }}>
-                   <BiFolder size={20} /> <span>주차별 기록</span>
+                   <BiFolder size={20} /> <span>주차별 로그</span>
                  </div>
               </div>
             </div>
