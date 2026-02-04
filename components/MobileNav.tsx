@@ -1,55 +1,44 @@
 "use client";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { BiHomeCircle, BiUser, BiEdit, BiLogIn } from "react-icons/bi";
+import { BiHome, BiPencil, BiBell } from "react-icons/bi";
 
-export default function MobileNav({ onOpenWrite }: { onOpenWrite: () => void }) {
-  const { user, googleLogin } = useAuth();
+interface MobileNavProps {
+  onOpenWrite: () => void;
+  onOpenNoti: () => void;
+  hasUnread?: boolean; // ★ 추가
+}
+
+export default function MobileNav({ onOpenWrite, onOpenNoti, hasUnread = false }: MobileNavProps) {
+  const { user } = useAuth();
 
   return (
-    <div className="mobile-only" style={{
-      position: 'fixed', bottom: 0, left: 0, width: '100%', 
-      backgroundColor: 'white', borderTop: '1px solid #eee',
-      display: 'flex', justifyContent: 'space-around', alignItems: 'center',
-      padding: '12px 0', zIndex: 100, boxShadow: '0 -2px 10px rgba(0,0,0,0.03)'
-    }}>
-      {/* 홈 */}
-      <Link href="/" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#333' }}>
-        <BiHomeCircle size={24} />
-        <span style={{ fontSize: '0.7rem', marginTop: '2px' }}>홈</span>
+    <div className="mobile-only" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: '60px', backgroundColor: 'white', borderTop: '1px solid #eee', display: 'flex', justifyContent: 'space-around', alignItems: 'center', zIndex: 100 }}>
+      
+      <Link href="/" style={{ color: '#333', padding: '10px' }}>
+        <BiHome size={24} />
       </Link>
+      
+      <div onClick={user ? onOpenNoti : undefined} style={{ cursor:'pointer', color: user ? '#333' : '#ddd', padding: '10px', position: 'relative' }}>
+        <BiBell size={24} />
+        {/* ★ 빨간 점 UI */}
+        {user && hasUnread && (
+           <span style={{ position: 'absolute', top: '10px', right: '12px', width: '6px', height: '6px', backgroundColor: '#f91880', borderRadius: '50%' }}></span>
+        )}
+      </div>
 
-      {/* 글쓰기 (중앙 강조) */}
-      {user && (
-        <button 
-          onClick={onOpenWrite}
-          style={{ 
-            background: '#333', color: 'white', border: 'none', borderRadius: '50%', 
-            width: '45px', height: '45px', display: 'flex', justifyContent: 'center', alignItems: 'center',
-            boxShadow: '0 4px 8px rgba(0,0,0,0.2)', marginBottom: '5px'
-          }}
-        >
-          <BiEdit size={22} />
-        </button>
-      )}
+      <div onClick={onOpenWrite} style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#1d9bf0', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'white', cursor: 'pointer', marginBottom: '10px', boxShadow: '0 2px 5px rgba(0,0,0,0.2)' }}>
+        <BiPencil size={20} />
+      </div>
 
-      {/* 프로필 or 로그인 */}
-        {user ? (
-          // 기존: <Link href="/profile" ... >
-          // 수정: 여기도 똑같이 user.uid를 붙여줍니다.
-          <Link href={`/profile/${user.uid}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#333' }}>
-            <img 
-              src={user.photoURL || ''} 
-              alt="프로필" 
-              style={{ width: '24px', height: '24px', borderRadius: '50%', objectFit: 'cover', border: '1px solid #ddd' }} 
-            />
-            <span style={{ fontSize: '0.7rem', marginTop: '2px' }}>프로필</span>
-          </Link>
-        ) : (
-        <button onClick={googleLogin} style={{ background: 'none', border: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#333' }}>
-          <BiLogIn size={24} />
-          <span style={{ fontSize: '0.7rem', marginTop: '2px' }}>로그인</span>
-        </button>
+      {user ? (
+        <Link href={`/profile/${user.uid}`} style={{ padding: '10px' }}>
+          <img src={user.photoURL || '/default-avatar.png'} alt="프로필" style={{ width: '24px', height: '24px', borderRadius: '50%', objectFit: 'cover', border: '1px solid #ddd' }} />
+        </Link>
+      ) : (
+        <Link href="/login" style={{ fontSize: '0.8rem', color: '#333', fontWeight: 'bold', padding: '10px' }}>
+          로그인
+        </Link>
       )}
     </div>
   );

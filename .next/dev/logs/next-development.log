@@ -1,9 +1,521 @@
-[00:00:02.319] Server  LOG     > [PWA] PWA support is disabled
-[00:00:02.320] Server  LOG     > [PWA] PWA support is disabled
-[00:00:02.726] Server  LOG     ✓ Ready in 2.4s
-[00:00:07.971] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:01:12.929] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:01:15.633] Server  ERROR   Error: Failed to fetch
-[00:01:15.884] Server  ERROR   Error: Failed to fetch
-[00:01:18.471] Server  ERROR   Error: Failed to fetch
-[00:01:18.716] Server  ERROR   Error: Failed to fetch
+[00:00:02.625] Server  LOG     > [PWA] PWA support is disabled
+[00:00:02.626] Server  LOG     > [PWA] PWA support is disabled
+[00:00:03.097] Server  LOG     ✓ Ready in 2.7s
+[00:00:08.914] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:18.985] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:04:12.691] Server  ERROR   ⨯ ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │     </div>
+ 79 │   );
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶     </div>
+ 79 │ │     );
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:04:13.086] Browser ERROR   ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │     </div>
+ 79 │   );
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶     </div>
+ 79 │ │     );
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:04:16.079] Browser ERROR   ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │     </div>
+ 79 │   );
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶     </div>
+ 79 │ │     );
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:04:22.911] Server  ERROR   ⨯ ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │     </div>
+ 79 │   );
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶     </div>
+ 79 │ │     );
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:04:23.084] Browser ERROR   ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │     </div>
+ 79 │   );
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶     </div>
+ 79 │ │     );
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:04:26.095] Server  ERROR   ⨯ ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │       </div>
+ 79 │   );
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶       </div>
+ 79 │ │     );
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:04:27.079] Browser ERROR   ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │     </div>
+ 79 │   );
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶     </div>
+ 79 │ │     );
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:04:27.079] Browser ERROR   ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │       </div>
+ 79 │   );
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶       </div>
+ 79 │ │     );
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:04:27.079] Browser ERROR   ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │       </div>
+ 79 │   );
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶       </div>
+ 79 │ │     );
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:04:37.617] Server  ERROR   ⨯ ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │     </div>
+ 79 │   );
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶     </div>
+ 79 │ │     );
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:04:38.086] Browser ERROR   ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │       </div>
+ 79 │   );
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶       </div>
+ 79 │ │     );
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:04:38.086] Browser ERROR   ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │     </div>
+ 79 │   );
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶     </div>
+ 79 │ │     );
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:04:45.080] Browser ERROR   ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │     </div>
+ 79 │   );
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶     </div>
+ 79 │ │     );
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:05:07.781] Server  ERROR   ⨯ ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │     </div>
+ 79 │   );
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶     </div>
+ 79 │ │     );
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:05:08.089] Browser ERROR   ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │     </div>
+ 79 │   );
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶     </div>
+ 79 │ │     );
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:05:15.917] Server  ERROR   ⨯ ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │     </div>
+ 79 │   )
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶     </div>
+ 79 │ │     )
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:05:16.080] Browser ERROR   ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │     </div>
+ 79 │   );
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶     </div>
+ 79 │ │     );
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:05:16.080] Browser ERROR   ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │     </div>
+ 79 │   )
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶     </div>
+ 79 │ │     )
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:05:16.080] Browser ERROR   ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │     </div>
+ 79 │   )
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶     </div>
+ 79 │ │     )
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:05:17.792] Browser ERROR   ./components/Sidebar.tsx
+Error:   × Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:80:1]
+ 77 │       )}
+ 78 │     </div>
+ 79 │   )
+ 80 │ }
+    · ▲
+    ╰────
+  × Expected '</', got 'jsx text'
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\Sidebar.tsx:78:1]
+ 75 │               <BiEdit size={20} /> 로그 남기기
+ 76 │             </button>
+ 77 │           )}
+ 78 │ ╭─▶     </div>
+ 79 │ │     )
+ 80 │ ╰─▶ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Sidebar.tsx
+./app/page.tsx
+[00:07:20.833] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:07:39.879] Browser ERROR   [2026-02-04T07:06:25.981Z]  @firebase/firestore: Firestore (12.8.0): Uncaught Error in snapshot listener: FirebaseError: [code=failed-precondition]: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/weekly-b1e97/firestore/indexes?create_composite=ClJwcm9qZWN0cy93ZWVrbHktYjFlOTcvZGF0YWJhc2VzLyhkZWZhdWx0KS9jb2xsZWN0aW9uR3JvdXBzL25vdGlmaWNhdGlvbnMvaW5kZXhlcy9fEAEaEAoMcmVjaXBpZW50VWlkEAEaDQoJY3JlYXRlZEF0EAIaDAoIX19uYW1lX18QAg
+[00:07:51.439] Browser ERROR   [2026-02-04T07:06:37.595Z]  @firebase/firestore: Firestore (12.8.0): Uncaught Error in snapshot listener: FirebaseError: [code=failed-precondition]: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/weekly-b1e97/firestore/indexes?create_composite=ClJwcm9qZWN0cy93ZWVrbHktYjFlOTcvZGF0YWJhc2VzLyhkZWZhdWx0KS9jb2xsZWN0aW9uR3JvdXBzL25vdGlmaWNhdGlvbnMvaW5kZXhlcy9fEAEaEAoMcmVjaXBpZW50VWlkEAEaDQoJY3JlYXRlZEF0EAIaDAoIX19uYW1lX18QAg
+[00:10:29.078] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:10:31.520] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:10:33.688] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:10:37.485] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:14:06.640] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:14:08.020] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:14:10.700] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:14:16.194] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:14:18.639] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:15:52.419] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:15:58.455] Server  ERROR   ⨯ Error: The default export is not a React Component in "/login/page"
+[00:15:58.657] Server  ERROR   ⨯ Error: The default export is not a React Component in "/login/page"
+[00:16:01.075] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold

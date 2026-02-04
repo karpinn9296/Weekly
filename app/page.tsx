@@ -1,26 +1,33 @@
 "use client";
 import { useEffect, useState } from "react";
 import { db } from "@/firebase";
-import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, updateDoc, doc, arrayUnion, arrayRemove, addDoc, where } from "firebase/firestore";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import Link from "next/link";
-import { BiCheckCircle } from "react-icons/bi"; 
+import { BiCheckCircle, BiHeart, BiSolidHeart, BiBell } from "react-icons/bi";
 import Sidebar from "@/components/Sidebar";
 import RightSection from "@/components/RightSection";
 import WriteModal from "@/components/WriteModal";
 import MobileNav from "@/components/MobileNav"; 
-import LinkPreview from "@/components/LinkPreview"; // 링크 미리보기 컴포넌트
+import LinkPreview from "@/components/LinkPreview";
+import NotificationModal from "@/components/NotificationModal";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Home() {
+  const { user } = useAuth();
   const [posts, setPosts] = useState<any[]>([]);
   const [selectedWeek, setSelectedWeek] = useState<string>("all");
   const [availableWeeks, setAvailableWeeks] = useState<string[]>([]);
-  // 주차 ID와 한글 이름을 연결해주는 지도(Map)
   const [weekLabels, setWeekLabels] = useState<Record<string, string>>({});
+  
+  // ★ 추가: 읽지 않은 알림이 있는지 여부
+  const [hasUnread, setHasUnread] = useState(false);
 
   const [isWriteModalOpen, setIsWriteModalOpen] = useState(false);
+  const [isNotiModalOpen, setIsNotiModalOpen] = useState(false);
 
+  // 1. 게시글 가져오기
   useEffect(() => {
     const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -30,41 +37,62 @@ export default function Home() {
       const weeks = Array.from(new Set(newPosts.map((p: any) => p.weekId))).sort().reverse();
       setAvailableWeeks(weeks as string[]);
 
-      // 게시글들에서 주차 이름 정보를 수집
       const labels: Record<string, string> = {};
       newPosts.forEach((p: any) => {
-        if (p.weekLabel) {
-            labels[p.weekId] = p.weekLabel; 
-        } else {
-            labels[p.weekId] = p.weekId; 
-        }
+        labels[p.weekId] = p.weekLabel || p.weekId;
       });
       setWeekLabels(labels);
     });
     return () => unsubscribe();
   }, []);
 
-  const filteredPosts = selectedWeek === "all" ? posts : posts.filter(p => p.weekId === selectedWeek);
+  // ★ 2. 읽지 않은 알림 감시 (추가됨)
+  useEffect(() => {
+    if (!user) return;
+    const q = query(
+      collection(db, "notifications"),
+      where("recipientUid", "==", user.uid),
+      where("read", "==", false) // 읽지 않은 것만 체크
+    );
 
-  // URL 찾는 정규식
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
-  
-  // 첫 번째 링크만 추출 (카드 표시용)
-  const extractFirstUrl = (text: string) => {
-    const match = text.match(urlRegex);
-    return match ? match[0] : null;
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setHasUnread(!snapshot.empty); // 하나라도 있으면 true
+    });
+    return () => unsubscribe();
+  }, [user]);
+
+  const handleLike = async (post: any) => {
+    if (!user) return alert("로그인이 필요합니다!");
+    
+    const postRef = doc(db, "posts", post.id);
+    const isLiked = post.likes?.includes(user.uid);
+
+    if (isLiked) {
+      await updateDoc(postRef, { likes: arrayRemove(user.uid) });
+    } else {
+      await updateDoc(postRef, { likes: arrayUnion(user.uid) });
+
+      if (post.uid !== user.uid) {
+        await addDoc(collection(db, "notifications"), {
+          recipientUid: post.uid,
+          senderUid: user.uid,
+          senderName: user.displayName || "알 수 없음",
+          senderPhoto: user.photoURL,
+          postId: post.id,
+          type: 'like',
+          createdAt: new Date(),
+          read: false // 기본값: 안 읽음
+        });
+      }
+    }
   };
 
-  // 본문 내용을 파란색 링크로 바꿔주는 함수
+  const filteredPosts = selectedWeek === "all" ? posts : posts.filter(p => p.weekId === selectedWeek);
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const extractFirstUrl = (text: string) => { const match = text.match(urlRegex); return match ? match[0] : null; };
   const renderContentWithLinks = (text: string) => {
     return text.split(urlRegex).map((part, index) => {
-      if (part.match(urlRegex)) {
-        return (
-          <a key={index} href={part} target="_blank" rel="noopener noreferrer" style={{ color: '#1d9bf0', textDecoration: 'none' }} onClick={(e) => e.stopPropagation()}>
-            {part}
-          </a>
-        );
-      }
+      if (part.match(urlRegex)) return <a key={index} href={part} target="_blank" rel="noopener noreferrer" style={{ color: '#1d9bf0', textDecoration: 'none' }} onClick={(e) => e.stopPropagation()}>{part}</a>;
       return part;
     });
   };
@@ -75,26 +103,30 @@ export default function Home() {
       <div className="mobile-container" style={{ display: 'flex', width: '100%', maxWidth: '1200px', alignItems: 'flex-start' }}>
         
         <div className="pc-only" style={{ width: '260px', flexShrink: 0 }}>
-          <Sidebar onOpenWrite={() => setIsWriteModalOpen(true)} />
+          {/* ★ hasUnread 전달 */}
+          <Sidebar onOpenWrite={() => setIsWriteModalOpen(true)} onOpenNoti={() => setIsNotiModalOpen(true)} hasUnread={hasUnread} />
         </div>
 
         <main style={{ flex: 1, padding: '20px', maxWidth: '640px', width: '100%' }}>
           
-          <div style={{ marginBottom: '20px' }}>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#222', marginBottom: '10px' }}>
+          <div style={{ marginBottom: '20px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#222' }}>
               {selectedWeek === 'all' ? '전체 타임라인' : (weekLabels[selectedWeek] || selectedWeek)}
             </h2>
+            
+            {/* 모바일 상단 알림 아이콘 (빨간 점 추가) */}
+            <button className="mobile-only" onClick={() => setIsNotiModalOpen(true)} style={{ background:'none', border:'none', cursor:'pointer', position: 'relative' }}>
+               <BiBell size={24} color="#333" />
+               {/* ★ 빨간 점 표시 */}
+               {hasUnread && <span style={{ position: 'absolute', top: 0, right: 0, width: '8px', height: '8px', backgroundColor: '#f91880', borderRadius: '50%' }}></span>}
+            </button>
+          </div>
 
-            <div className="mobile-only horizontal-scroll">
-              <button onClick={() => setSelectedWeek('all')} style={{ whiteSpace: 'nowrap', padding: '8px 16px', borderRadius: '20px', border: 'none', backgroundColor: selectedWeek === 'all' ? '#333' : 'white', color: selectedWeek === 'all' ? 'white' : '#555', fontWeight: 'bold', fontSize: '0.9rem', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-                전체
-              </button>
-              {availableWeeks.map(week => (
-                <button key={week} onClick={() => setSelectedWeek(week)} style={{ whiteSpace: 'nowrap', padding: '8px 16px', borderRadius: '20px', border: 'none', backgroundColor: selectedWeek === week ? '#333' : 'white', color: selectedWeek === week ? 'white' : '#555', fontWeight: 'bold', fontSize: '0.9rem', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-                  {weekLabels[week] || week}
-                </button>
-              ))}
-            </div>
+          <div className="mobile-only horizontal-scroll" style={{marginBottom: '20px'}}>
+             <button onClick={() => setSelectedWeek('all')} style={{ whiteSpace: 'nowrap', padding: '8px 16px', borderRadius: '20px', border: 'none', backgroundColor: selectedWeek === 'all' ? '#333' : 'white', color: selectedWeek === 'all' ? 'white' : '#555', fontWeight: 'bold', fontSize: '0.9rem', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>전체</button>
+             {availableWeeks.map(week => (
+               <button key={week} onClick={() => setSelectedWeek(week)} style={{ whiteSpace: 'nowrap', padding: '8px 16px', borderRadius: '20px', border: 'none', backgroundColor: selectedWeek === week ? '#333' : 'white', color: selectedWeek === week ? 'white' : '#555', fontWeight: 'bold', fontSize: '0.9rem', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>{weekLabels[week] || week}</button>
+             ))}
           </div>
 
           {filteredPosts.length === 0 ? (
@@ -102,7 +134,8 @@ export default function Home() {
           ) : (
             filteredPosts.map((post) => {
               const firstUrl = extractFirstUrl(post.content);
-              
+              const isLiked = post.likes?.includes(user?.uid);
+
               return (
                 <article key={post.id} style={{ backgroundColor: 'white', borderRadius: '16px', padding: '20px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', position: 'relative', border: '1px solid #eee' }}>
                   <div style={{ display: 'flex', gap: '15px' }}>
@@ -118,19 +151,28 @@ export default function Home() {
                         <span style={{ color: '#999', fontSize: '0.85rem' }}>· {post.weekLabel || weekLabels[post.weekId] || post.weekId}</span>
                         <span style={{ color: '#888', fontSize: '0.8rem' }}>· {post.createdAt?.seconds ? format(new Date(post.createdAt.seconds * 1000), "M/d HH:mm", { locale: ko }) : ""}</span>
                       </div>
+                      
                       <div style={{ whiteSpace: 'pre-wrap', marginBottom: '10px', lineHeight: '1.6', color: '#333' }}>
                         {renderContentWithLinks(post.content)}
                       </div>
                       
-                      {/* 링크 미리보기 (오픈 그래프 카드) */}
                       {firstUrl && <LinkPreview url={firstUrl} />}
 
-                      {/* 사용자가 올린 이미지 */}
                       {post.imageUrl && (
                         <div style={{ marginTop: '15px', borderRadius: '12px', overflow: 'hidden', border: '1px solid #cfd9de', maxHeight: '500px' }}>
                           <img src={post.imageUrl} style={{ width: '100%', height: '100%', objectFit: 'contain', maxHeight: '500px' }} />
                         </div>
                       )}
+
+                      <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <button 
+                          onClick={() => handleLike(post)}
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', padding: '5px', color: isLiked ? '#f91880' : '#536471' }}
+                        >
+                          {isLiked ? <BiSolidHeart size={20} /> : <BiHeart size={20} />}
+                          <span style={{ fontSize: '0.9rem' }}>{post.likes?.length || 0}</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </article>
@@ -142,11 +184,12 @@ export default function Home() {
         <div className="pc-only" style={{ width: '300px', flexShrink: 0 }}>
           <RightSection weeks={availableWeeks} weekLabels={weekLabels} selectedWeek={selectedWeek} onSelectWeek={setSelectedWeek} />
         </div>
-
       </div>
       
-      <MobileNav onOpenWrite={() => setIsWriteModalOpen(true)} />
+      {/* ★ hasUnread 전달 */}
+      <MobileNav onOpenWrite={() => setIsWriteModalOpen(true)} onOpenNoti={() => setIsNotiModalOpen(true)} hasUnread={hasUnread} />
       {isWriteModalOpen && <WriteModal onClose={() => setIsWriteModalOpen(false)} />}
+      {isNotiModalOpen && <NotificationModal onClose={() => setIsNotiModalOpen(false)} />}
     </div>
   );
 }
