@@ -21,13 +21,10 @@ export default function Home() {
   const [availableWeeks, setAvailableWeeks] = useState<string[]>([]);
   const [weekLabels, setWeekLabels] = useState<Record<string, string>>({});
   
-  // ★ 추가: 읽지 않은 알림이 있는지 여부
   const [hasUnread, setHasUnread] = useState(false);
-
   const [isWriteModalOpen, setIsWriteModalOpen] = useState(false);
   const [isNotiModalOpen, setIsNotiModalOpen] = useState(false);
 
-  // 1. 게시글 가져오기
   useEffect(() => {
     const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -46,42 +43,24 @@ export default function Home() {
     return () => unsubscribe();
   }, []);
 
-  // ★ 2. 읽지 않은 알림 감시 (추가됨)
   useEffect(() => {
     if (!user) return;
-    const q = query(
-      collection(db, "notifications"),
-      where("recipientUid", "==", user.uid),
-      where("read", "==", false) // 읽지 않은 것만 체크
-    );
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setHasUnread(!snapshot.empty); // 하나라도 있으면 true
-    });
+    const q = query(collection(db, "notifications"), where("recipientUid", "==", user.uid), where("read", "==", false));
+    const unsubscribe = onSnapshot(q, (snapshot) => { setHasUnread(!snapshot.empty); });
     return () => unsubscribe();
   }, [user]);
 
   const handleLike = async (post: any) => {
     if (!user) return alert("로그인이 필요합니다!");
-    
     const postRef = doc(db, "posts", post.id);
     const isLiked = post.likes?.includes(user.uid);
-
     if (isLiked) {
       await updateDoc(postRef, { likes: arrayRemove(user.uid) });
     } else {
       await updateDoc(postRef, { likes: arrayUnion(user.uid) });
-
       if (post.uid !== user.uid) {
         await addDoc(collection(db, "notifications"), {
-          recipientUid: post.uid,
-          senderUid: user.uid,
-          senderName: user.displayName || "알 수 없음",
-          senderPhoto: user.photoURL,
-          postId: post.id,
-          type: 'like',
-          createdAt: new Date(),
-          read: false // 기본값: 안 읽음
+          recipientUid: post.uid, senderUid: user.uid, senderName: user.displayName || "알 수 없음", senderPhoto: user.photoURL, postId: post.id, type: 'like', createdAt: new Date(), read: false
         });
       }
     }
@@ -100,10 +79,10 @@ export default function Home() {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', minHeight: '100vh', backgroundColor: '#f5f7f8' }}>
       
-      <div className="mobile-container" style={{ display: 'flex', width: '100%', maxWidth: '1200px', alignItems: 'flex-start' }}>
+      {/* ★ 수정됨: alignItems: 'flex-start' 제거 */}
+      <div className="mobile-container" style={{ display: 'flex', width: '100%', maxWidth: '1200px' }}>
         
         <div className="pc-only" style={{ width: '260px', flexShrink: 0 }}>
-          {/* ★ hasUnread 전달 */}
           <Sidebar onOpenWrite={() => setIsWriteModalOpen(true)} onOpenNoti={() => setIsNotiModalOpen(true)} hasUnread={hasUnread} />
         </div>
 
@@ -113,11 +92,8 @@ export default function Home() {
             <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#222' }}>
               {selectedWeek === 'all' ? '전체 타임라인' : (weekLabels[selectedWeek] || selectedWeek)}
             </h2>
-            
-            {/* 모바일 상단 알림 아이콘 (빨간 점 추가) */}
             <button className="mobile-only" onClick={() => setIsNotiModalOpen(true)} style={{ background:'none', border:'none', cursor:'pointer', position: 'relative' }}>
                <BiBell size={24} color="#333" />
-               {/* ★ 빨간 점 표시 */}
                {hasUnread && <span style={{ position: 'absolute', top: 0, right: 0, width: '8px', height: '8px', backgroundColor: '#f91880', borderRadius: '50%' }}></span>}
             </button>
           </div>
@@ -135,7 +111,6 @@ export default function Home() {
             filteredPosts.map((post) => {
               const firstUrl = extractFirstUrl(post.content);
               const isLiked = post.likes?.includes(user?.uid);
-
               return (
                 <article key={post.id} style={{ backgroundColor: 'white', borderRadius: '16px', padding: '20px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', position: 'relative', border: '1px solid #eee' }}>
                   <div style={{ display: 'flex', gap: '15px' }}>
@@ -151,24 +126,17 @@ export default function Home() {
                         <span style={{ color: '#999', fontSize: '0.85rem' }}>· {post.weekLabel || weekLabels[post.weekId] || post.weekId}</span>
                         <span style={{ color: '#888', fontSize: '0.8rem' }}>· {post.createdAt?.seconds ? format(new Date(post.createdAt.seconds * 1000), "M/d HH:mm", { locale: ko }) : ""}</span>
                       </div>
-                      
                       <div style={{ whiteSpace: 'pre-wrap', marginBottom: '10px', lineHeight: '1.6', color: '#333' }}>
                         {renderContentWithLinks(post.content)}
                       </div>
-                      
                       {firstUrl && <LinkPreview url={firstUrl} />}
-
                       {post.imageUrl && (
                         <div style={{ marginTop: '15px', borderRadius: '12px', overflow: 'hidden', border: '1px solid #cfd9de', maxHeight: '500px' }}>
                           <img src={post.imageUrl} style={{ width: '100%', height: '100%', objectFit: 'contain', maxHeight: '500px' }} />
                         </div>
                       )}
-
                       <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                        <button 
-                          onClick={() => handleLike(post)}
-                          style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', padding: '5px', color: isLiked ? '#f91880' : '#536471' }}
-                        >
+                        <button onClick={() => handleLike(post)} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', padding: '5px', color: isLiked ? '#f91880' : '#536471' }}>
                           {isLiked ? <BiSolidHeart size={20} /> : <BiHeart size={20} />}
                           <span style={{ fontSize: '0.9rem' }}>{post.likes?.length || 0}</span>
                         </button>
@@ -186,7 +154,6 @@ export default function Home() {
         </div>
       </div>
       
-      {/* ★ hasUnread 전달 */}
       <MobileNav onOpenWrite={() => setIsWriteModalOpen(true)} onOpenNoti={() => setIsNotiModalOpen(true)} hasUnread={hasUnread} />
       {isWriteModalOpen && <WriteModal onClose={() => setIsWriteModalOpen(false)} />}
       {isNotiModalOpen && <NotificationModal onClose={() => setIsNotiModalOpen(false)} />}

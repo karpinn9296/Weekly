@@ -81,7 +81,7 @@ export default function NotificationModal({ onClose }: NotificationModalProps) {
                 </div>
                 <div>
                   <div style={{ fontSize: '0.9rem' }}>
-                    <strong>{noti.senderName}</strong>님이 회원님의 기록을 좋아합니다.
+                    <strong>{noti.senderName}</strong>님이 회원님의 로그를 좋아합니다.
                   </div>
                   <div style={{ fontSize: '0.75rem', color: '#888', marginTop: '4px' }}>
                     {noti.createdAt?.seconds ? format(new Date(noti.createdAt.seconds * 1000), "M월 d일 a h:mm", { locale: ko }) : "방금 전"}
