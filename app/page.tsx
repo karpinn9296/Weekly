@@ -154,7 +154,7 @@ export default function Home() {
         </div>
       </div>
       
-      <MobileNav onOpenWrite={() => setIsWriteModalOpen(true)} onOpenNoti={() => setIsNotiModalOpen(true)} hasUnread={hasUnread} />
+      <MobileNav onOpenWrite={() => setIsWriteModalOpen(true)} />
       {isWriteModalOpen && <WriteModal onClose={() => setIsWriteModalOpen(false)} />}
       {isNotiModalOpen && <NotificationModal onClose={() => setIsNotiModalOpen(false)} />}
     </div>

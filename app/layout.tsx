@@ -28,8 +28,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body>
-        <AuthProvider>{children}</AuthProvider>
+      {/* style에 overflowX: 'hidden' 추가 */}
+      <body style={{ margin: 0, padding: 0, backgroundColor: '#f5f7f8', overflowX: 'hidden' }}>
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

@@ -1,4 +1,94 @@
-[00:00:02.728] Server  LOG     > [PWA] PWA support is disabled
-[00:00:02.728] Server  LOG     > [PWA] PWA support is disabled
-[00:00:03.182] Server  LOG     ✓ Ready in 2.8s
-[00:00:07.913] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:03.241] Server  LOG     > [PWA] PWA support is disabled
+[00:00:03.242] Server  LOG     > [PWA] PWA support is disabled
+[00:00:03.759] Server  LOG     ✓ Ready in 3.3s
+[00:00:54.817] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:50.738] Server  ERROR   ⨯ ./components/MobileNav.tsx
+Error:   × Expression expected
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\MobileNav.tsx:41:1]
+ 38 │         }}
+ 39 │       >
+ 40 │         <BiEdit size={20} /
+ 41 │       </div>
+    ·       ─
+ 42 │ 
+ 43 │       {/* 3. 프로필 버튼 */}
+ 43 │       {user ? (
+    ╰────
+  × Unterminated regexp literal
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\MobileNav.tsx:41:1]
+ 38 │         }}
+ 39 │       >
+ 40 │         <BiEdit size={20} /
+ 41 │       </div>
+    ·        ─────
+ 42 │ 
+ 43 │       {/* 3. 프로필 버튼 */}
+ 43 │       {user ? (
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/MobileNav.tsx
+./app/page.tsx
+[00:01:50.811] Browser ERROR   ./components/MobileNav.tsx
+Error:   × Expression expected
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\MobileNav.tsx:41:1]
+ 38 │         }}
+ 39 │       >
+ 40 │         <BiEdit size={20} /
+ 41 │       </div>
+    ·       ─
+ 42 │ 
+ 43 │       {/* 3. 프로필 버튼 */}
+ 43 │       {user ? (
+    ╰────
+  × Unterminated regexp literal
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\MobileNav.tsx:41:1]
+ 38 │         }}
+ 39 │       >
+ 40 │         <BiEdit size={20} /
+ 41 │       </div>
+    ·        ─────
+ 42 │ 
+ 43 │       {/* 3. 프로필 버튼 */}
+ 43 │       {user ? (
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/MobileNav.tsx
+./app/page.tsx
+[00:01:51.833] Browser ERROR   ./components/MobileNav.tsx
+Error:   × Expression expected
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\MobileNav.tsx:41:1]
+ 38 │         }}
+ 39 │       >
+ 40 │         <BiEdit size={20} /
+ 41 │       </div>
+    ·       ─
+ 42 │ 
+ 43 │       {/* 3. 프로필 버튼 */}
+ 43 │       {user ? (
+    ╰────
+  × Unterminated regexp literal
+    ╭─[C:\Users\ADMIN\Documents\Weekly\components\MobileNav.tsx:41:1]
+ 38 │         }}
+ 39 │       >
+ 40 │         <BiEdit size={20} /
+ 41 │       </div>
+    ·        ─────
+ 42 │ 
+ 43 │       {/* 3. 프로필 버튼 */}
+ 43 │       {user ? (
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/MobileNav.tsx
+./app/page.tsx
