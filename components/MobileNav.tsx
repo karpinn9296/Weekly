@@ -34,16 +34,18 @@ export default function MobileNav({ onOpenWrite }: { onOpenWrite: () => void }) 
       )}
 
       {/* 프로필 or 로그인 */}
-      {user ? (
-        <Link href="/profile" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#333' }}>
-          <img 
-            src={user.photoURL || ''} 
-            alt="프로필" 
-            style={{ width: '24px', height: '24px', borderRadius: '50%', objectFit: 'cover', border: '1px solid #ddd' }} 
-          />
-          <span style={{ fontSize: '0.7rem', marginTop: '2px' }}>프로필</span>
-        </Link>
-      ) : (
+        {user ? (
+          // 기존: <Link href="/profile" ... >
+          // 수정: 여기도 똑같이 user.uid를 붙여줍니다.
+          <Link href={`/profile/${user.uid}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#333' }}>
+            <img 
+              src={user.photoURL || ''} 
+              alt="프로필" 
+              style={{ width: '24px', height: '24px', borderRadius: '50%', objectFit: 'cover', border: '1px solid #ddd' }} 
+            />
+            <span style={{ fontSize: '0.7rem', marginTop: '2px' }}>프로필</span>
+          </Link>
+        ) : (
         <button onClick={googleLogin} style={{ background: 'none', border: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', color: '#333' }}>
           <BiLogIn size={24} />
           <span style={{ fontSize: '0.7rem', marginTop: '2px' }}>로그인</span>

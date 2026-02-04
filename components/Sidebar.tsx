@@ -27,10 +27,12 @@ export default function Sidebar({ onOpenWrite }: { onOpenWrite: () => void }) {
         </Link>
         
         {user ? (
-          <Link href="/profile" style={{ 
+  // 기존: <Link href="/profile" ... >
+  // 수정: 백틱(`)을 사용해서 user.uid를 주소에 포함시킵니다.
+          <Link href={`/profile/${user.uid}`} style={{ 
             display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', 
-            fontSize: '1.1rem', fontWeight: '600', color: '#444', textDecoration: 'none',
-            borderRadius: '12px'
+           fontSize: '1.1rem', fontWeight: '600', color: '#444', textDecoration: 'none',
+           borderRadius: '12px'
           }}>
             <img 
               src={user.photoURL || ''} 
