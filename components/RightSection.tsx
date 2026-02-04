@@ -11,7 +11,7 @@ export default function RightSection({ weeks, weekLabels = {}, selectedWeek, onS
   return (
     <div style={{ width: '350px', padding: '20px 0 0 30px', position: 'sticky', top: 0, height: '100vh' }}>
       <div style={{ backgroundColor: '#f7f9f9', borderRadius: '16px', padding: '16px' }}>
-        <h3 style={{ fontSize: '1.2rem', fontWeight: '800', marginBottom: '16px' }}>📂 주간 아카이브</h3>
+        <h3 style={{ fontSize: '1.2rem', fontWeight: '800', marginBottom: '16px' }}>주간 아카이브</h3>
         
         <ul style={{ listStyle: 'none', padding: 0 }}>
           <li 
