@@ -264,7 +264,7 @@ export default function UserProfilePage() {
                                 <span style={{ fontWeight: 'bold', fontSize: '1rem', color: '#333' }}>{post.authorName}</span>
                                 <span style={{ color: '#999', fontSize: '0.85rem' }}>· {post.weekLabel || post.weekId}</span>
                               </div>
-                              <div style={{ whiteSpace: 'pre-wrap', marginBottom: '15px', lineHeight: '1.6', color: '#333' }}>
+                              <div style={{ whiteSpace: 'pre-wrap', marginBottom: '15px', lineHeight: '1.6', color: '#333', wordBreak: 'break-word', overflowWrap: 'anywhere'}}>
                                 {renderContentWithLinks(post.content)}
                               </div>
                               {firstUrl && <LinkPreview url={firstUrl} />}
