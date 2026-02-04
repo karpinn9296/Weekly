@@ -152,8 +152,7 @@ export default function UserProfilePage() {
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'center', minHeight: '100vh', backgroundColor: '#f5f7f8' }}>
-        {/* ★ 수정됨: alignItems: 'flex-start' 제거 */}
-        <div className="mobile-container" style={{ display: 'flex', width: '100%', maxWidth: '1200px', alignItems: 'flex-start' }.alignItems ? { display: 'flex', width: '100%', maxWidth: '1200px' } : { display: 'flex', width: '100%', maxWidth: '1200px' }}>
+        <div className="mobile-container" style={{ display: 'flex', width: '100%', maxWidth: '1200px' }}>
           
           <div className="pc-only" style={{ width: '260px', flexShrink: 0 }}>
              <Sidebar onOpenWrite={() => setIsWriteModalOpen(true)} onOpenNoti={() => setIsNotiModalOpen(true)} hasUnread={hasUnread} />
@@ -217,7 +216,7 @@ export default function UserProfilePage() {
                     <p style={{ color: '#666', margin: '2px 0 12px 0', fontSize: '0.9rem' }}>@{customId}</p>
                     <p style={{ fontSize: '0.95rem', lineHeight: '1.5', whiteSpace: 'pre-wrap', marginBottom: '12px', color: '#333' }}>{bio || "자기소개를 입력해주세요."}</p>
                     <div style={{ display: 'flex', gap: '12px', color: '#888', fontSize: '0.9rem', marginTop: '10px' }}>
-                       <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><BiListUl /> <span style={{ fontWeight: 'bold', color: '#333' }}>{myPosts.length}</span> 게시글</span>
+                       <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><BiListUl /> <span style={{ fontWeight: 'bold', color: '#333' }}>{myPosts.length}</span> 로그</span>
                        {isAdmin && <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#F4B400', fontWeight: 'bold' }}><BiCheckCircle /> 관리자</span>}
                     </div>
                   </>
@@ -236,10 +235,10 @@ export default function UserProfilePage() {
                     <div key={week.id} onClick={() => setSelectedWeekFilter(week.id)} style={{ backgroundColor: 'white', padding: '20px', borderRadius: '16px', cursor: 'pointer', border: '1px solid #eee', boxShadow: '0 2px 5px rgba(0,0,0,0.03)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
                       <BiFolder size={32} color="#1d9bf0" />
                       <span style={{ fontWeight: 'bold', fontSize: '1rem' }}>{week.label}</span>
-                      <span style={{ fontSize: '0.8rem', color: '#888' }}>{week.count}개의 로그</span>
+                      <span style={{ fontSize: '0.8rem', color: '#888' }}>{week.count}개의 기록</span>
                     </div>
                   ))}
-                  {weeks.length === 0 && <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#888', padding: '20px' }}>기록이 없습니다.</p>}
+                  {weeks.length === 0 && <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#888', padding: '20px' }}>로그가 없습니다.</p>}
                 </div>
               )}
               {!loading && (activeTab === 'all' || selectedWeekFilter) && (
@@ -258,13 +257,23 @@ export default function UserProfilePage() {
                         <article key={post.id} style={{ backgroundColor: 'white', borderRadius: '16px', padding: '20px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', position: 'relative', border: '1px solid #eee' }}>
                           <div style={{ display: 'flex', gap: '15px' }}>
                             <img src={post.authorPhoto || "/default-avatar.png"} style={{ width: '45px', height: '45px', borderRadius: '50%', objectFit: 'cover', border: '1px solid #eee' }} />
-                            <div style={{ flex: 1 }}>
+                            
+                            {/* ★ 수정된 부분: minWidth: 0 추가 */}
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              
                               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
                                 {post.authorIsAdmin && <BiCheckCircle size={16} color="#F4B400" title="관리자" />} 
                                 <span style={{ fontWeight: 'bold', fontSize: '1rem', color: '#333' }}>{post.authorName}</span>
                                 <span style={{ color: '#999', fontSize: '0.85rem' }}>· {post.weekLabel || post.weekId}</span>
                               </div>
-                              <div style={{ whiteSpace: 'pre-wrap', marginBottom: '15px', lineHeight: '1.6', color: '#333', wordBreak: 'break-word', overflowWrap: 'anywhere'}}>
+                              <div style={{ 
+                                whiteSpace: 'pre-wrap', 
+                                marginBottom: '10px', 
+                                lineHeight: '1.6', 
+                                color: '#333', 
+                                wordBreak: 'break-word', 
+                                overflowWrap: 'anywhere' 
+                              }}>
                                 {renderContentWithLinks(post.content)}
                               </div>
                               {firstUrl && <LinkPreview url={firstUrl} />}
@@ -289,7 +298,9 @@ export default function UserProfilePage() {
         </div>
       </div>
       <MobileNav onOpenWrite={() => setIsWriteModalOpen(true)} onOpenNoti={() => setIsNotiModalOpen(true)} hasUnread={hasUnread} />
-      {showCropper && <ImageCropper imageSrc={cropImageSrc} aspect={cropType === 'avatar' ? 1 : 3} cropShape={cropType === 'avatar' ? 'round' : 'rect'} onCropComplete={onCropComplete} onClose={() => setShowCropper(false)} />}
+      
+      {showCropper && <ImageCropper imageSrc={cropImageSrc} aspect={cropType === 'avatar' ? 1 : 2} cropShape={cropType === 'avatar' ? 'round' : 'rect'} onCropComplete={onCropComplete} onClose={() => setShowCropper(false)} />}
+      
       {isWriteModalOpen && <WriteModal onClose={() => setIsWriteModalOpen(false)} />}
       {isNotiModalOpen && <NotificationModal onClose={() => setIsNotiModalOpen(false)} />}
     </>
