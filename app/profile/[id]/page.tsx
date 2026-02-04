@@ -3,16 +3,16 @@ import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { db, storage } from "@/firebase";
 import { updateProfile } from "firebase/auth";
-import { collection, query, where, orderBy, getDocs, doc, setDoc, getDoc, deleteDoc, writeBatch } from "firebase/firestore";
+import { collection, query, where, orderBy, getDocs, doc, getDoc, deleteDoc, writeBatch, onSnapshot } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useRouter, useParams } from "next/navigation";
-import { BiArrowBack, BiCalendar, BiTrash, BiLogOut, BiCamera, BiFolder, BiListUl, BiCheckCircle } from "react-icons/bi";
-import { format } from "date-fns";
+import { BiArrowBack, BiTrash, BiLogOut, BiCamera, BiFolder, BiListUl, BiCheckCircle } from "react-icons/bi";
 import ImageCropper from "@/components/ImageCropper";
 import Sidebar from "@/components/Sidebar";
 import MobileNav from "@/components/MobileNav";
 import WriteModal from "@/components/WriteModal";
-import LinkPreview from "@/components/LinkPreview"; // 링크 프리뷰 추가
+import LinkPreview from "@/components/LinkPreview";
+import NotificationModal from "@/components/NotificationModal"; // ★ 추가
 
 export default function UserProfilePage() {
   const { user, logout } = useAuth();
@@ -45,9 +45,27 @@ export default function UserProfilePage() {
   const [showCropper, setShowCropper] = useState(false);
   const [cropImageSrc, setCropImageSrc] = useState<string>("");
   const [cropType, setCropType] = useState<'avatar' | 'header'>('avatar');
+  
+  // 모달 상태들
   const [isWriteModalOpen, setIsWriteModalOpen] = useState(false);
+  const [isNotiModalOpen, setIsNotiModalOpen] = useState(false); // ★ 추가: 알림창 상태
+  const [hasUnread, setHasUnread] = useState(false); // ★ 추가: 빨간 점 상태
 
-  // 데이터 로드
+  // 1. 읽지 않은 알림 감시 (메인 페이지와 동일한 로직)
+  useEffect(() => {
+    if (!user) return;
+    const q = query(
+      collection(db, "notifications"),
+      where("recipientUid", "==", user.uid),
+      where("read", "==", false)
+    );
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setHasUnread(!snapshot.empty);
+    });
+    return () => unsubscribe();
+  }, [user]);
+
+  // 2. 프로필 및 게시글 데이터 로드
   useEffect(() => {
     if (!profileId) return;
 
@@ -219,7 +237,12 @@ export default function UserProfilePage() {
         <div className="mobile-container" style={{ display: 'flex', width: '100%', maxWidth: '1200px', alignItems: 'flex-start' }}>
           
           <div className="pc-only" style={{ width: '260px', flexShrink: 0 }}>
-             <Sidebar onOpenWrite={() => setIsWriteModalOpen(true)} />
+             {/* ★ Sidebar에 필수 props 전달 */}
+             <Sidebar 
+               onOpenWrite={() => setIsWriteModalOpen(true)} 
+               onOpenNoti={() => setIsNotiModalOpen(true)} 
+               hasUnread={hasUnread} 
+             />
           </div>
 
           <div style={{ flex: 1, width: '100%', maxWidth: '640px', background: 'white', minHeight: '100vh', boxShadow: '0 0 20px rgba(0,0,0,0.03)' }}>
@@ -376,7 +399,6 @@ export default function UserProfilePage() {
                                 {renderContentWithLinks(post.content)}
                               </div>
                               
-                              {/* 링크 프리뷰 추가 */}
                               {firstUrl && <LinkPreview url={firstUrl} />}
 
                               {post.imageUrl && (
@@ -400,13 +422,21 @@ export default function UserProfilePage() {
         </div>
       </div>
 
-      <MobileNav onOpenWrite={() => setIsWriteModalOpen(true)} />
+      {/* ★ MobileNav에도 필수 props 전달 */}
+      <MobileNav 
+        onOpenWrite={() => setIsWriteModalOpen(true)} 
+        onOpenNoti={() => setIsNotiModalOpen(true)} 
+        hasUnread={hasUnread} 
+      />
   
       {showCropper && (
         <ImageCropper imageSrc={cropImageSrc} aspect={cropType === 'avatar' ? 1 : 3} cropShape={cropType === 'avatar' ? 'round' : 'rect'} onCropComplete={onCropComplete} onClose={() => setShowCropper(false)} />
       )}
       
       {isWriteModalOpen && <WriteModal onClose={() => setIsWriteModalOpen(false)} />}
+      
+      {/* ★ 알림 모달 추가 */}
+      {isNotiModalOpen && <NotificationModal onClose={() => setIsNotiModalOpen(false)} />}
     </>
   );
 }
