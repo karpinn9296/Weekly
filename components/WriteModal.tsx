@@ -1,134 +1,124 @@
 "use client";
-import { useState, useEffect } from "react";
-import { db, storage } from "@/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { getISOWeek, getWeekOfMonth, getYear, getMonth } from "date-fns";
-import { BiX, BiImageAdd } from "react-icons/bi";
+import { addDoc, collection } from "firebase/firestore";
+import { db, storage } from "@/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { BiImageAdd, BiX, BiLoaderAlt } from "react-icons/bi";
 
-export default function WriteModal({ onClose }: { onClose: () => void }) {
+interface WriteModalProps {
+  onClose: () => void;
+}
+
+export default function WriteModal({ onClose }: WriteModalProps) {
   const { user } = useAuth();
   const [content, setContent] = useState("");
-  const [file, setFile] = useState<File | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 붙여넣기 감지 핸들러
-  const handlePaste = (e: React.ClipboardEvent) => {
-    const items = e.clipboardData.items;
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].type.indexOf("image") !== -1) {
-        const blob = items[i].getAsFile();
-        if (blob) setFile(blob);
-        e.preventDefault(); // 이미지가 텍스트로 들어가는 것 방지
-        break;
-      }
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
     }
   };
 
   const handleSubmit = async () => {
-    if (!content.trim() && !file) return;
+    if (!content.trim() && !imageFile) return;
     if (!user) return;
-    setIsUploading(true);
 
+    setIsSubmitting(true);
     try {
+      // 주차 계산
       const now = new Date();
-      const year = getYear(now);
-      const month = getMonth(now) + 1; 
-      const weekOfMonth = getWeekOfMonth(now); 
-      const weekId = `${year}-${month}월-${weekOfMonth}주차`;
+      const firstDayOfYear = new Date(now.getFullYear(), 0, 1);
+      const pastDays = (now.getTime() - firstDayOfYear.getTime()) / 86400000;
+      const weekNum = Math.ceil((pastDays + firstDayOfYear.getDay() + 1) / 7);
+      const weekLabel = `${now.getMonth() + 1}월 ${Math.ceil(now.getDate() / 7)}주차`;
+      const weekId = `${now.getFullYear()}-W${weekNum}`;
 
       let imageUrl = "";
-      if (file) {
-        const fileRef = ref(storage, `posts/${user.uid}/${Date.now()}_${file.name}`);
-        await uploadBytes(fileRef, file);
-        imageUrl = await getDownloadURL(fileRef);
+      if (imageFile) {
+        const storageRef = ref(storage, `posts/${user.uid}/${Date.now()}_${imageFile.name}`);
+        await uploadBytes(storageRef, imageFile);
+        imageUrl = await getDownloadURL(storageRef);
       }
 
       await addDoc(collection(db, "posts"), {
+        content,
+        imageUrl,
+        createdAt: now,
         uid: user.uid,
-        authorName: user.displayName,
-        authorPhoto: user.photoURL,
-        content: content,
-        imageUrl: imageUrl,
-        weekId: weekId,
-        weekLabel: `${month}월 ${weekOfMonth}주차`,
-        createdAt: serverTimestamp(),
+        authorName: user.displayName || "이름 없음",
+        authorPhoto: user.photoURL || "",
+        authorIsAdmin: false, // 추후 프로필 수정 시 일괄 업데이트됨
+        weekId,
+        weekLabel,
       });
 
       onClose();
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
       alert("업로드 실패");
     } finally {
-      setIsUploading(false);
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div style={{
-      position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
-      backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', justifyContent: 'center', alignItems: 'center', backdropFilter: 'blur(3px)'
-    }} onClick={onClose}>
-      <div 
-        onClick={(e) => e.stopPropagation()} 
-        style={{
-          backgroundColor: 'white', width: '600px', maxWidth: '90%', borderRadius: '20px',
-          padding: '25px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
-        }}
-      >
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', alignItems: 'center' }}>
-          <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#333' }}>새로운 로그</span>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#888' }}><BiX size={28} /></button>
+    <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 }}>
+      <div style={{ backgroundColor: 'white', width: '90%', maxWidth: '500px', borderRadius: '16px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px', maxHeight: '90vh', overflowY: 'auto' }}>
+        
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3 style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>기록 남기기</h3>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><BiX size={24} /></button>
         </div>
 
-        <div style={{ display: 'flex', gap: '15px' }}>
-          <img src={user?.photoURL || ''} style={{ width: '45px', height: '45px', borderRadius: '50%', objectFit: 'cover', border: '1px solid #eee' }} />
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            onPaste={handlePaste} // 붙여넣기 이벤트 연결
-            placeholder="무슨 일이 있었나요? (이미지를 붙여넣을 수 있어요)"
-            style={{ 
-              flex: 1, height: '120px', border: 'none', resize: 'none', 
-              fontSize: '1.1rem', outline: 'none', fontFamily: 'inherit', lineHeight: '1.5'
-            }}
-          />
-        </div>
+        {/* 입력창 */}
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          placeholder="이번 주는 어떤 일이 있었나요? (URL을 입력하면 게시글에서 자동으로 카드가 생성됩니다)"
+          style={{ width: '100%', height: '150px', padding: '12px', borderRadius: '12px', border: '1px solid #ddd', resize: 'none', fontSize: '1rem', fontFamily: 'inherit' }}
+        />
 
-        {file && (
-          <div style={{ marginLeft: '60px', marginTop: '10px', position: 'relative', width: 'fit-content' }}>
-            <img src={URL.createObjectURL(file)} style={{ maxHeight: '250px', borderRadius: '12px', border: '1px solid #eee' }} />
-            <button 
-              onClick={() => setFile(null)}
-              style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.6)', color: 'white', border: 'none', borderRadius: '50%', width: '24px', height: '24px', cursor: 'pointer' }}
-            >
-              <BiX />
-            </button>
-          </div>
+        {/* 이미지 미리보기 (업로드할 사진만 표시) */}
+        {imagePreview && (
+           <div style={{ marginTop: '5px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #ddd', position: 'relative' }}>
+             <img src={imagePreview} alt="preview" style={{ width: '100%', maxHeight: '200px', objectFit: 'cover' }} />
+             <button onClick={() => { setImageFile(null); setImagePreview(""); }} style={{ position: 'absolute', top: '5px', right: '5px', background: 'rgba(0,0,0,0.6)', color: 'white', borderRadius: '50%', border: 'none', width: '24px', height: '24px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><BiX /></button>
+           </div>
         )}
 
-        <hr style={{ border: 'none', borderTop: '1px solid #f0f0f0', margin: '20px 0' }} />
-
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <label style={{ cursor: 'pointer', color: '#555', padding: '10px', borderRadius: '50%', transition: 'background 0.2s' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+          <label style={{ cursor: 'pointer', color: '#1d9bf0', display: 'flex', alignItems: 'center', gap: '5px' }}>
             <BiImageAdd size={24} />
-            <input type="file" accept="image/*" onChange={(e) => e.target.files && setFile(e.target.files[0])} style={{ display: 'none' }} />
+            <span style={{ fontSize: '0.9rem', fontWeight: 'bold' }}>사진 추가</span>
+            <input type="file" accept="image/*" hidden onChange={handleImageChange} />
           </label>
-          
+
           <button 
-            onClick={handleSubmit}
-            disabled={isUploading}
+            onClick={handleSubmit} 
+            disabled={isSubmitting || (!content.trim() && !imageFile)}
             style={{ 
-              padding: '10px 24px', borderRadius: '20px', 
-              backgroundColor: isUploading ? '#ccc' : '#333', color: 'white', 
-              border: 'none', fontWeight: 'bold', cursor: 'pointer', fontSize: '1rem'
+              padding: '10px 24px', borderRadius: '20px', border: 'none', 
+              backgroundColor: isSubmitting || (!content.trim() && !imageFile) ? '#ccc' : '#1d9bf0', 
+              color: 'white', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px'
             }}
           >
-            {isUploading ? "게시 중..." : "게시하기"}
+            {isSubmitting && <BiLoaderAlt className="spinner" />}
+            기록하기
           </button>
         </div>
+
       </div>
+      
+      <style jsx>{`
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .spinner { animation: spin 1s linear infinite; }
+      `}</style>
     </div>
   );
 }

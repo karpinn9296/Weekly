@@ -12,6 +12,7 @@ import ImageCropper from "@/components/ImageCropper";
 import Sidebar from "@/components/Sidebar";
 import MobileNav from "@/components/MobileNav";
 import WriteModal from "@/components/WriteModal";
+import LinkPreview from "@/components/LinkPreview"; // 링크 프리뷰 추가
 
 export default function UserProfilePage() {
   const { user, logout } = useAuth();
@@ -187,6 +188,25 @@ export default function UserProfilePage() {
 
   const handleLogout = async () => { await logout(); router.push("/"); };
 
+  // URL 처리 함수
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const extractFirstUrl = (text: string) => {
+    const match = text.match(urlRegex);
+    return match ? match[0] : null;
+  };
+  const renderContentWithLinks = (text: string) => {
+    return text.split(urlRegex).map((part, index) => {
+      if (part.match(urlRegex)) {
+        return (
+          <a key={index} href={part} target="_blank" rel="noopener noreferrer" style={{ color: '#1d9bf0', textDecoration: 'none' }} onClick={(e) => e.stopPropagation()}>
+            {part}
+          </a>
+        );
+      }
+      return part;
+    });
+  };
+
   if (loading) return <div style={{display:'flex', justifyContent:'center', alignItems:'center', height:'100vh'}}>로딩 중...</div>;
 
   const displayPosts = activeTab === 'all' 
@@ -277,7 +297,6 @@ export default function UserProfilePage() {
                   </div>
                 ) : (
                   <>
-                    {/* 상단 프로필 헤더 이름 (여기는 오른쪽에 마크 유지 - 보통 헤더는 이름 뒤에 뱃지가 붙음) */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <h2 style={{ fontSize: '1.5rem', fontWeight: '900', margin: 0, color: '#222', lineHeight: '1.2' }}>{name}</h2>
                       {isAdmin && <BiCheckCircle size={20} color="#F4B400" title="관리자 계정" />}
@@ -338,32 +357,41 @@ export default function UserProfilePage() {
                   {displayPosts.length === 0 ? (
                     <p style={{ padding: '40px', textAlign: 'center', color: '#888' }}>작성된 글이 없습니다.</p>
                   ) : (
-                    displayPosts.map(post => (
-                      <article key={post.id} style={{ backgroundColor: 'white', borderRadius: '16px', padding: '20px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', position: 'relative', border: '1px solid #eee' }}>
-                        <div style={{ display: 'flex', gap: '15px' }}>
-                          <img src={post.authorPhoto || "/default-avatar.png"} style={{ width: '45px', height: '45px', borderRadius: '50%', objectFit: 'cover', border: '1px solid #eee' }} />
-                          <div style={{ flex: 1 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-                              
-                              {/* ★ 게시글 리스트: 마크를 이름 앞으로 이동 (금색 #F4B400) ★ */}
-                              {post.authorIsAdmin && <BiCheckCircle size={16} color="#F4B400" title="관리자" />} 
-                              <span style={{ fontWeight: 'bold', fontSize: '1rem', color: '#333' }}>{post.authorName}</span>
-                              
-                              <span style={{ color: '#999', fontSize: '0.85rem' }}>· {post.weekLabel || post.weekId}</span>
-                            </div>
-                            <p style={{ whiteSpace: 'pre-wrap', marginBottom: '15px', lineHeight: '1.6', color: '#333' }}>{post.content}</p>
-                            {post.imageUrl && (
-                              <div style={{ marginTop: '15px', borderRadius: '12px', overflow: 'hidden', border: '1px solid #f0f0f0', maxHeight: '500px', backgroundColor: '#f9f9f9' }}>
-                                <img src={post.imageUrl} style={{ width: '100%', height: '100%', objectFit: 'contain', maxHeight: '500px' }} />
+                    displayPosts.map(post => {
+                      const firstUrl = extractFirstUrl(post.content);
+                      
+                      return (
+                        <article key={post.id} style={{ backgroundColor: 'white', borderRadius: '16px', padding: '20px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', position: 'relative', border: '1px solid #eee' }}>
+                          <div style={{ display: 'flex', gap: '15px' }}>
+                            <img src={post.authorPhoto || "/default-avatar.png"} style={{ width: '45px', height: '45px', borderRadius: '50%', objectFit: 'cover', border: '1px solid #eee' }} />
+                            <div style={{ flex: 1 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+                                
+                                {post.authorIsAdmin && <BiCheckCircle size={16} color="#F4B400" title="관리자" />} 
+                                <span style={{ fontWeight: 'bold', fontSize: '1rem', color: '#333' }}>{post.authorName}</span>
+                                
+                                <span style={{ color: '#999', fontSize: '0.85rem' }}>· {post.weekLabel || post.weekId}</span>
                               </div>
-                            )}
+                              <div style={{ whiteSpace: 'pre-wrap', marginBottom: '15px', lineHeight: '1.6', color: '#333' }}>
+                                {renderContentWithLinks(post.content)}
+                              </div>
+                              
+                              {/* 링크 프리뷰 추가 */}
+                              {firstUrl && <LinkPreview url={firstUrl} />}
+
+                              {post.imageUrl && (
+                                <div style={{ marginTop: '15px', borderRadius: '12px', overflow: 'hidden', border: '1px solid #f0f0f0', maxHeight: '500px', backgroundColor: '#f9f9f9' }}>
+                                  <img src={post.imageUrl} style={{ width: '100%', height: '100%', objectFit: 'contain', maxHeight: '500px' }} />
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                        {isOwner && (
-                          <button onClick={() => handleDeletePost(post.id)} style={{ position: 'absolute', top: '15px', right: '15px', border: 'none', background: 'none', color: '#ddd', cursor: 'pointer', padding: '5px' }}><BiTrash size={18} /></button>
-                        )}
-                      </article>
-                    ))
+                          {isOwner && (
+                            <button onClick={() => handleDeletePost(post.id)} style={{ position: 'absolute', top: '15px', right: '15px', border: 'none', background: 'none', color: '#ddd', cursor: 'pointer', padding: '5px' }}><BiTrash size={18} /></button>
+                          )}
+                        </article>
+                      );
+                    })
                   )}
                 </>
               )}
