@@ -1,4 +1,5 @@
-[00:00:03.032] Server  LOG     > [PWA] PWA support is disabled
-[00:00:03.033] Server  LOG     > [PWA] PWA support is disabled
-[00:00:03.466] Server  LOG     ✓ Ready in 3s
-[00:00:09.847] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:03.187] Server  LOG     > [PWA] PWA support is disabled
+[00:00:03.188] Server  LOG     > [PWA] PWA support is disabled
+[00:00:03.625] Server  LOG     ✓ Ready in 3.2s
+[00:11:44.624] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:40:55.004] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
