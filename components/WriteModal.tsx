@@ -70,7 +70,7 @@ export default function WriteModal({ onClose }: WriteModalProps) {
       // ★ 3. 관리자 여부 확인 (DB에서 최신 정보 가져오기)
       const userDocRef = doc(db, "users", user.uid);
       const userDocSnap = await getDoc(userDocRef);
-      const isAdmin = userDocSnap.exists() ? userDocSnap.data().isAdmin : false;
+      const isAdmin = userDocSnap.exists() ? (userDocSnap.data().isAdmin || false) : false;
 
       // 4. 게시글 저장
       await addDoc(collection(db, "posts"), {
@@ -136,7 +136,7 @@ export default function WriteModal({ onClose }: WriteModalProps) {
             onClick={handleSubmit}
             disabled={isSubmitting || !content.trim()}
             style={{ 
-              backgroundColor: content.trim() ? '#1d9bf0' : '#8ecdf8', 
+              backgroundColor: content.trim() ? '#333333' : '#5c5c5c', 
               color: 'white', 
               padding: '10px 20px', 
               borderRadius: '20px', 
@@ -157,4 +157,5 @@ export default function WriteModal({ onClose }: WriteModalProps) {
       `}</style>
     </div>
   );
+
 }
